@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,25 +25,35 @@ public class StudentController {
 	private StudentService studentService;
 	@Autowired
 	private CourseService courseService;
-	
+
 	@GetMapping("/get")
-	public List<StudentData> getAllStudents(){
+	public List<StudentData> getAllStudents() {
 		return studentService.getAllStudents();
 	}
-	@PostMapping(value = "/add",consumes = MediaType.APPLICATION_JSON_VALUE)
+
+	@PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public StudentData addStudent(@RequestBody StudentData studentData) {
 		return studentService.addStudent(studentData);
 	}
+
 	@GetMapping("/get/{studentId}")
 	public Optional<StudentData> getStudentById(@PathVariable Long studentId) {
 		return studentService.getStudentById(studentId);
 	}
+
 	@GetMapping("/find/{studentName}")
-	 public List<StudentData> findStudentsContainingByName(@PathVariable String studentName){
-	     return studentService.findByNameContaining(studentName);
-	 }
+	public List<StudentData> findStudentsContainingByName(@PathVariable String studentName) {
+		return studentService.findByNameContaining(studentName);
+	}
+
 	@GetMapping("/search/{fee}")
-    public List<CoursesData> findCourseLessThanPrice(@PathVariable double fee){
-        return courseService.findByFeeLessThan(fee);
-    }
+	public List<CoursesData> findCourseLessThanPrice(@PathVariable double fee) {
+		return courseService.findByFeeLessThan(fee);
+	}
+
+	@DeleteMapping("/delete/student/{studentId}")
+	public String deleteByStudentId(@PathVariable Long studentId) {
+		studentService.deleteByStudentId(studentId);
+		return "Student Record Deleted";
+	}
 }
